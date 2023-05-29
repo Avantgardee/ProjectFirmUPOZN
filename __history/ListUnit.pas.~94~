@@ -1,0 +1,410 @@
+Unit ListUnit;
+
+Interface
+
+Uses
+    Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+    System.Classes, Vcl.Graphics,
+    Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls,
+    Vcl.ExtCtrls,
+    Vcl.Menus, Vcl.Grids, System.Actions, Vcl.ActnList, WrkUnit, Main, Work,
+    Tool;
+
+Type
+    TListForm = Class(TForm)
+        PanelBtn: TPanel;
+        ButtonAdd: TButton;
+        ButtonEdit: TButton;
+        ButtonDelete: TButton;
+        MainMenu1: TMainMenu;
+        File1: TMenuItem;
+        Open1: TMenuItem;
+        SaveAs1: TMenuItem;
+    strgrdList: TStringGrid;
+        ActionList: TActionList;
+        Add: TAction;
+        Delete: TAction;
+        Change: TAction;
+        OpenDialog: TOpenDialog;
+        SaveDialog: TSaveDialog;
+        Open: TAction;
+        Save: TAction;
+        OpenDialog1: TOpenDialog;
+        SaveDialog1: TSaveDialog;
+        SaveDialog2: TSaveDialog;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+        Procedure FormClose(Sender: TObject; Var Action: TCloseAction);
+        Procedure AddExecute(Sender: TObject);
+        Procedure UpdateWorkList(W: TTasksList);
+        Procedure UpdateEmpList(E: TEmployeeList);
+        Procedure ClearGrid;
+        Procedure ChangeExecute(Sender: TObject);
+        Procedure DeleteExecute(Sender: TObject);
+        Procedure ActionListUpdate(Action: TBasicAction; Var Handled: Boolean);
+        Procedure OpenExecute(Sender: TObject);
+        Procedure SaveExecute(Sender: TObject);
+    Private
+        { Private declarations }
+    Public
+        Procedure NewEmplList(Emp: TEmployeeList);
+        Procedure NewWorkList(Wrk: TTasksList);
+        { Public declarations }
+    End;
+
+Var
+    ListForm: TListForm;
+
+Implementation
+
+{$R *.dfm}
+{ TListForm }
+
+Procedure TListForm.ActionListUpdate(Action: TBasicAction;
+  Var Handled: Boolean);
+Begin
+    ButtonEdit.Enabled := strgrdList.RowCount > 1;
+    ButtonDelete.Enabled := strgrdList.RowCount > 1;
+    SaveAs1.Enabled := strgrdList.RowCount > 1;
+End;
+
+Procedure TListForm.AddExecute(Sender: TObject);
+Var
+    Res: TModalResult;
+    Work: TTask;
+    Emp: TEmployee;
+Begin
+    If strgrdList.ColCount = 5 Then
+    Begin
+        Res := WrkForm.ShowForNew(Emp);
+        If Res = MrCancel Then
+            Exit;
+        If FormMain.EmployeeList.EmployeeExists(Emp) Then
+            ShowMessage('Сотрудник уже существует!')
+        Else If FormMain.EmployeeList.WorkerCodeExists(Emp.Code) Then
+            ShowMessage('Код сотрудника уже существует!')
+        Else If Not(FormMain.EmployeeList.DirectorCodeExists(Emp.Director)) And
+          (Emp.Post <> 'Руководитель') Then
+            ShowMessage('Такого руководителя не существует!')
+        Else
+        Begin
+            FormMain.EmployeeList.Add(Emp);
+        End;
+    End
+    Else
+    Begin
+        Res := WorkForm.ShowForNew(Work);
+        If Res = MrCancel Then
+            Exit;
+        If FormMain.WorkList.WorkExists(Work) Then
+            ShowMessage('Работа уже существует!')
+        Else If Not(FormMain.EmployeeList.DirectorCodeExists
+          (Work.Director)) Then
+            ShowMessage('Такого руководителя не существует!')
+        Else If Not(FormMain.EmployeeList.WorkerCodeExists
+          (Work.Implementers)) Then
+            ShowMessage('Такого сотрудника не существует!')
+        Else
+            FormMain.WorkList.Add(Work);
+    End;
+End;
+
+Procedure TListForm.ChangeExecute(Sender: TObject);
+Var
+    Res: TModalResult;
+    Work, TempWork: TTask;
+    Emp: TEmployee;
+    TempEmp: TEmployee;
+Begin
+    If strgrdList.Row > 0 Then
+    Begin
+        If strgrdList.ColCount = 5 Then
+        Begin
+            Emp := FormMain.EmployeeList.FindPrjct
+              (strgrdList.Cells[0, strgrdList.Row]);
+            TempEmp := Emp;
+            Res := WrkForm.ShowForEdit(Emp);
+            If Res = MrCancel Then
+                Exit;
+            If FormMain.EmployeeList.EmployeeExists(Emp) Then
+                ShowMessage('Сотрудник уже существует!')
+            Else If FormMain.EmployeeList.WorkerCodeExists(Emp.Code) And
+              (TempEmp.Code <> Emp.Code) Then
+                ShowMessage('Код сотрудника уже существует!')
+            Else If Not(FormMain.EmployeeList.DirectorCodeExists(Emp.Director))
+              And (Emp.Post <> 'Руководитель') Then
+                ShowMessage('Такого руководителя не существует!')
+            Else
+            Begin
+                If TempEmp.Post = 'Руководитель' Then
+                Begin
+                    FormMain.EmployeeList.Chng(TempEmp.Code, Emp.Code);
+                    FormMain.WorkList.ChgDir(TempEmp.Code, Emp.Code);
+                    FormMain.WorkList.ChgWork(TempEmp.Code, Emp.Code);
+                End
+                Else
+                    FormMain.WorkList.ChgWork(TempEmp.Code, Emp.Code);
+                FormMain.EmployeeList.ChangePrjct(strgrdList.Row, Emp);
+            End;
+        End
+        Else
+        Begin
+            TempWork.Name := strgrdList.Cells[0, strgrdList.Row];
+            TempWork.Task := strgrdList.Cells[1, strgrdList.Row];
+            TempWork.Implementers := strgrdList.Cells[2, strgrdList.Row];
+            TempWork.Director := strgrdList.Cells[3, strgrdList.Row];
+            TempWork.Date := StrToDate(strgrdList.Cells[4, strgrdList.Row]);
+            TempWork.Period := StrToInt(strgrdList.Cells[5, strgrdList.Row]);
+
+            Work := FormMain.WorkList.FindWrk(TempWork);
+
+            Res := WorkForm.ShowForEdit(Work);
+            If Res = MrCancel Then
+                Exit;
+            If FormMain.WorkList.WorkExists(Work) Then
+                ShowMessage('Работа уже существует!')
+            Else If Not(FormMain.EmployeeList.DirectorCodeExists
+              (Work.Director)) Then
+                ShowMessage('Такого руководителя не существует!')
+            Else If Not(FormMain.EmployeeList.WorkerCodeExists
+              (Work.Implementers)) Then
+                ShowMessage('Такого сотрудника не существует!')
+            Else
+                FormMain.WorkList.ChangeWork(strgrdList.Row, Work);
+        End;
+    End;
+End;
+
+Procedure TListForm.ClearGrid;
+Begin
+    strgrdList.RowCount := 1;
+End;
+
+Procedure TListForm.DeleteExecute(Sender: TObject);
+Var
+    Work, TempWork: TTask;
+    Emp: TEmployee;
+Begin
+    If strgrdList.Row > 0 Then
+    Begin
+        If strgrdList.ColCount = 5 Then
+        Begin
+            Emp := FormMain.EmployeeList.FindPrjct
+              (strgrdList.Cells[0, strgrdList.Row]);
+            If Emp.Post = 'Руководитель' Then
+            Begin
+                FormMain.EmployeeList.DeleteWorker(Emp.Code);
+                FormMain.WorkList.DeleteDir(Emp.Code)
+            End
+            Else
+                FormMain.WorkList.DeleteWork(Emp.Code);
+            FormMain.EmployeeList.Delete(Emp);
+        End
+        Else
+        Begin
+            TempWork.Name := strgrdList.Cells[0, strgrdList.Row];
+            TempWork.Task := strgrdList.Cells[1, strgrdList.Row];
+            TempWork.Implementers := strgrdList.Cells[2, strgrdList.Row];
+            TempWork.Director := strgrdList.Cells[3, strgrdList.Row];
+            TempWork.Date := StrToDate(strgrdList.Cells[4, strgrdList.Row]);
+            TempWork.Period := StrToInt(strgrdList.Cells[5, strgrdList.Row]);
+
+            Work := FormMain.WorkList.FindWrk(TempWork);
+            FormMain.WorkList.Delete(Work);
+        End;
+    End;
+End;
+
+Procedure TListForm.FormClose(Sender: TObject; Var Action: TCloseAction);
+Begin
+    FormMain.Enabled := True;
+End;
+
+Procedure TListForm.NewEmplList(Emp: TEmployeeList);
+Var
+    I: Integer;
+    It: TPEmployee;
+Begin
+    strgrdList.RowCount := 1;
+    Width := 920;
+    With strgrdList Do
+    Begin
+        ColCount := 5;
+        Cells[0, 0] := 'Код';
+        Cells[1, 0] := 'ФИО';
+        Cells[2, 0] := 'Должность';
+        ColWidths[3] :=200;
+        Cells[3, 0] := 'Число рабочих часов';
+        Cells[4, 0] := 'Руководитель';
+    End;
+    If Emp.Size > 0 Then
+        UpdateEmpList(Emp);
+End;
+
+Procedure TListForm.NewWorkList(Wrk: TTasksList);
+Var
+    I, J: Integer;
+    It: TPWork;
+Begin
+    StringGrid.RowCount := 1;
+    Width := 1050;
+    With StringGrid Do
+    Begin
+        ColCount := 6;
+        Cells[0, 0] := 'Проект';
+        Cells[1, 0] := 'Задание';
+        Cells[2, 0] := 'Исполнитель';
+        Cells[3, 0] := 'Руководитель';
+        ColWidths[4] :=200;
+        Cells[4, 0] := 'Дата выдачи задания';
+        Cells[5, 0] := 'Срок выполнения';
+    End;
+    If Wrk.Size > 0 Then
+        UpdateWorkList(Wrk);
+End;
+
+Procedure TListForm.UpdateEmpList(E: TEmployeeList);
+Var
+    It: TPEmployee;
+    I: Integer;
+Begin
+    ClearGrid;
+    It := E.HBegin;
+    For I := 1 To E.Size Do
+    Begin
+        StringGrid.RowCount := StringGrid.RowCount + 1;
+        With StringGrid Do
+        Begin
+            Cells[0, I] := It.Data.Code;
+            Cells[1, I] := It.Data.FullName.SecondName + ' ' +
+              It.Data.FullName.FirstName[1] + '.' +
+              It.Data.FullName.MiddleName[1] + '.';
+            Cells[2, I] := It.Data.Post;
+            Cells[3, I] := IntToStr(It.Data.WorkingHours);
+            Cells[4, I] := It.Data.Director;
+        End;
+        It := It^.Next;
+    End;
+End;
+
+Procedure TListForm.UpdateWorkList(W: TTasksList);
+Var
+    It: TPWork;
+    I: Integer;
+Begin
+    ClearGrid;
+    It := W.HBegin;
+    For I := 1 To W.Size Do
+    Begin
+        StringGrid.RowCount := StringGrid.RowCount + 1;
+
+            With StringGrid Do
+            Begin
+                Cells[0, I] := It.Data.Name;
+                Cells[1, I] := It.Data.Task;
+                Cells[2, I] := It.Data.Implementers;
+                Cells[3, I] := It.Data.Director;
+                Cells[4, I] := DateToStr(It.Data.Date);
+                Cells[5, I] := IntToStr(It.Data.Period);
+            End;
+            It := It^.Next;
+
+    End;
+End;
+
+Procedure TListForm.OpenExecute(Sender: TObject);
+Var
+    Emp: TEmployee;
+    Work: TTask;
+    EmpFile: File Of TEmployee;
+    WorkFile: File Of TTask;
+Begin
+    If StringGrid.ColCount = 5 Then
+    Begin
+        If OpenDialog.Execute Then
+        Begin
+            AssignFile(EmpFile, OpenDialog.FileName);
+            Reset(EmpFile);
+            Try
+                While Not(EOF(EmpFile)) Do
+                Begin
+                    Read(EmpFile, Emp);
+                    If FormMain.EmployeeList.EmployeeExists(Emp) Then
+                        ShowMessage('Сотрудник уже существует!')
+                    Else
+                        FormMain.EmployeeList.Add(Emp);
+                End;
+            Finally
+                CloseFile(EmpFile);
+            End;
+        End;
+    End
+    Else
+    Begin
+        If OpenDialog1.Execute Then
+        Begin
+            AssignFile(WorkFile, OpenDialog1.FileName);
+            Reset(WorkFile);
+            Try
+                While Not(EOF(WorkFile)) Do
+                Begin
+                    Read(WorkFile, Work);
+                    If FormMain.WorkList.WorkExists(Work) Then
+                        ShowMessage('Работа уже существует!')
+                    Else
+                        FormMain.WorkList.Add(Work);
+                End;
+            Finally
+                CloseFile(WorkFile);
+            End;
+        End;
+    End;
+End;
+
+
+
+Procedure TListForm.SaveExecute(Sender: TObject);
+Var
+    TxtFile: TextFile;
+    I, J: Integer;
+Begin
+    If (PanelBtn.Visible) And (StringGrid.ColCount = 5) Then
+    Begin
+        If SaveDialog.Execute Then
+        Begin
+            FormMain.EmployeeList.Save(SaveDialog.FileName);
+            FormMain.FSave := True;
+        End;
+    End
+    Else If (PanelBtn.Visible) And (StringGrid.ColCount = 6) Then
+    Begin
+        If SaveDialog1.Execute Then
+        Begin
+            FormMain.WorkList.Save(SaveDialog1.FileName);
+            FormMain.FSave := True;
+        End;
+    End
+    Else
+    Begin
+        If SaveDialog2.Execute Then
+        Begin
+            Rewrite(TxtFile);
+            Try
+                For I := 0 To StringGrid.RowCount - 1 Do
+                Begin
+                    For J := 0 To StringGrid.ColCount - 1 Do
+                    Begin
+                        Write(TxtFile, StringGrid.Cells[J, I] + ' ');
+                    End;
+                    Writeln(TxtFile);
+                End;
+
+            Finally
+                CloseFile(TxtFile);
+            End;
+        End;
+    End;
+End;
+
+End.

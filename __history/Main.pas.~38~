@@ -1,0 +1,168 @@
+unit Main;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IniFiles, Vcl.StdCtrls, tool,
+  System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList, Vcl.ExtCtrls;
+
+type
+  TFormMain = class(TForm)
+    ButtonEmp: TButton;
+    ButtonWork: TButton;
+    ButtonDir: TButton;
+    ButtonEmpl: TButton;
+    ActionList1: TActionList;
+    EmplListShow: TAction;
+    WorkListShow: TAction;
+    DirList: TAction;
+    EmpList: TAction;
+    ImageList1: TImageList;
+    Image1: TImage;
+    Image2: TImage;
+    procedure FormCreate(Sender: TObject);
+    procedure EmplListShowExecute(Sender: TObject);
+    procedure WorkListShowExecute(Sender: TObject);
+    procedure DirListExecute(Sender: TObject);
+    procedure EmpListExecute(Sender: TObject);
+    procedure ActionList1Update(Action: TBasicAction; var Handled: Boolean);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure Image2Click(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    FSave : Boolean;
+    EmpPath : String;
+    WorkPath : String;
+    WorkList : TTasksList;
+    EmployeeList : TEmployeeList;
+    { Public declarations }
+  end;
+
+var
+  FormMain: TFormMain;
+
+implementation
+{$R *.dfm}
+
+uses ListUnit, FindUnit;
+
+procedure TFormMain.ActionList1Update(Action: TBasicAction;
+  var Handled: Boolean);
+begin
+    ButtonWork.Enabled := EmployeeList.Size > 0;
+    ButtonDir.Enabled := WorkList.Size > 0;
+    ButtonEmpl.Enabled := WorkList.Size > 0;
+end;
+
+procedure TFormMain.DirListExecute(Sender: TObject);
+begin
+    ListForm.Open1.Enabled := False;
+    ListForm.PanelBtn.Visible := False;
+    Enabled := false;
+    FormFind.Show;
+    FormFind.FindDir;
+end;
+
+procedure TFormMain.EmpListExecute(Sender: TObject);
+
+    Var
+    L: TTasksList;
+Begin
+    L := TTasksList.Create;
+
+    L := FormMain.WorkList.FindProjectsByDate;
+    If L.Size = 0 Then
+        ShowMessage('0')
+    Else
+    Begin
+        ListForm.Show;
+        ListForm.PanelBtn.Visible:=false;
+        ListForm.NewWorkList(L);
+    End;
+end;
+
+procedure TFormMain.EmplListShowExecute(Sender: TObject);
+begin
+    ListForm.Open1.Enabled := True;
+    ListForm.PanelBtn.Visible := True;
+    Enabled := false;
+    ListForm.Show;
+    ListForm.NewEmplList(EmployeeList);
+end;
+
+procedure TFormMain.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+Var
+    WND: HWND;
+    lpCaption, lpText: PChar;
+    Tip: Integer;
+Begin
+    if Not(FSave) then
+    begin
+        WND := Self.Handle;
+        lpCaption := 'Выход';
+        lpText := 'В программу были внесены изменения. Сохранить их?';
+        Tip := MB_YESNOCANCEL + MB_ICONQUESTION+ MB_APPLMODAL;
+        case MessageBox(WND, lpText, lpCaption, Tip) Of
+            IDYES :
+            begin
+                if WorkPath = '' then
+                begin
+                    ListForm.PanelBtn.Visible := True;
+                    ListForm.strgrdList.ColCount := 6;
+                    ListForm.SaveExecute(Sender);
+                end
+                else
+                    WorkList.Save(WorkPath);
+                if EmpPath = '' then
+                begin
+                    ListForm.PanelBtn.Visible := True;
+                    ListForm.strgrdList.ColCount := 5;
+                    ListForm.SaveExecute(Sender);
+                end
+                else
+                    EmployeeList.Save(EmpPath);
+                CanClose := True;
+            end;
+            IDNO : CanClose := True;
+            IDCANCEL : CanClose := False;
+        end
+    end;
+End;
+
+procedure TFormMain.FormCreate(Sender: TObject);
+begin
+    EmpPath := '';
+    WorkPath := '';
+    FSave := True;
+    WorkList := TTasksList.Create;
+    EmployeeList := TEmployeeList.Create;
+    ButtonDir.Enabled := WorkList.Size > 0;
+    ButtonEmpl.Enabled := WorkList.Size > 0;
+end;
+
+procedure TFormMain.Image1Click(Sender: TObject);
+begin
+Application.MessageBox
+      ('Данная программа предназначена для учёта сотрудников в проектной фирме.'+#13#10+'1) Чтобы приступить к работе, необходимо сначала добавить сотрудника с должностью "Руководитель"'+#13#10+'2) Чтобы добавить задание, необходимо перейти в специальный для этого раздел и записать все параметры для него.'+#13#10+'3) Возможна выгрузка заданий и сотрудников из файла', 'О программе');
+end;
+
+procedure TFormMain.Image2Click(Sender: TObject);
+begin
+  Application.MessageBox
+      ('1. Убоженко Максим Александрович, студент группы 251005' + #13#10 +
+      'Учебная практика в рамках дисциплины ОАиП', 'О разработчике');
+end;
+
+procedure TFormMain.WorkListShowExecute(Sender: TObject);
+begin
+    ListForm.Open1.Enabled := True;
+    ListForm.PanelBtn.Visible := True;
+    Enabled := false;
+    ListForm.Show;
+    ListForm.NewWorkList(WorkList);
+end;
+
+end.

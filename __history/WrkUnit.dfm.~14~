@@ -1,0 +1,161 @@
+object WrkForm: TWrkForm
+  Left = 0
+  Top = 0
+  BorderIcons = []
+  BorderStyle = bsSingle
+  ClientHeight = 301
+  ClientWidth = 336
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  OnKeyDown = FormKeyDown
+  PixelsPerInch = 96
+  TextHeight = 13
+  object LabelFN: TLabel
+    Left = 24
+    Top = 56
+    Width = 19
+    Height = 13
+    Caption = #1048#1084#1103
+  end
+  object LabelSN: TLabel
+    Left = 24
+    Top = 88
+    Width = 44
+    Height = 13
+    Caption = #1060#1072#1084#1080#1083#1080#1103
+  end
+  object LabelMN: TLabel
+    Left = 24
+    Top = 120
+    Width = 49
+    Height = 13
+    Caption = #1054#1090#1095#1077#1089#1090#1074#1086
+  end
+  object Label1: TLabel
+    Left = 24
+    Top = 24
+    Width = 83
+    Height = 13
+    Caption = #1050#1086#1076' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+  end
+  object Label2: TLabel
+    Left = 24
+    Top = 152
+    Width = 57
+    Height = 13
+    Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+  end
+  object Label3: TLabel
+    Left = 24
+    Top = 184
+    Width = 144
+    Height = 13
+    Caption = #1063#1080#1089#1083#1086' '#1095#1072#1089#1086#1074' '#1088#1072#1073#1086#1090#1099' '#1074' '#1089#1091#1090#1082#1080
+  end
+  object Label4: TLabel
+    Left = 24
+    Top = 211
+    Width = 96
+    Height = 13
+    Caption = #1050#1086#1076' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1103
+  end
+  object ButtonAdd: TButton
+    Left = 48
+    Top = 253
+    Width = 91
+    Height = 25
+    Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+    Enabled = False
+    ModalResult = 1
+    TabOrder = 0
+  end
+  object ButtonCncl: TButton
+    Left = 168
+    Top = 253
+    Width = 91
+    Height = 25
+    Caption = #1054#1090#1084#1077#1085#1080#1090#1100
+    ModalResult = 2
+    TabOrder = 1
+  end
+  object EditName: TEdit
+    Left = 197
+    Top = 53
+    Width = 121
+    Height = 21
+    MaxLength = 10
+    TabOrder = 2
+    OnChange = ChangeEdit
+    OnKeyDown = FormKeyDown
+    OnKeyPress = EditPress
+  end
+  object EditS: TEdit
+    Left = 197
+    Top = 80
+    Width = 121
+    Height = 21
+    MaxLength = 10
+    TabOrder = 3
+    OnChange = ChangeEdit
+    OnKeyDown = FormKeyDown
+    OnKeyPress = EditPress
+  end
+  object EditM: TEdit
+    Left = 197
+    Top = 117
+    Width = 121
+    Height = 21
+    MaxLength = 15
+    TabOrder = 4
+    OnChange = ChangeEdit
+    OnKeyDown = FormKeyDown
+    OnKeyPress = EditPress
+  end
+  object EditPst: TEdit
+    Left = 197
+    Top = 144
+    Width = 121
+    Height = 21
+    TabOrder = 5
+    OnChange = ChangeEdit
+    OnKeyDown = FormKeyDown
+  end
+  object EditTime: TNumberBox
+    Left = 197
+    Top = 181
+    Width = 121
+    Height = 21
+    MinValue = 1.000000000000000000
+    MaxValue = 12.000000000000000000
+    TabOrder = 6
+    Value = 1.000000000000000000
+    OnKeyDown = FormKeyDown
+  end
+  object EditCode: TEdit
+    Left = 197
+    Top = 26
+    Width = 121
+    Height = 21
+    MaxLength = 4
+    NumbersOnly = True
+    TabOrder = 7
+    OnChange = ChangeEdit
+  end
+  object EditDirCode: TEdit
+    Left = 197
+    Top = 208
+    Width = 121
+    Height = 21
+    MaxLength = 4
+    NumbersOnly = True
+    TabOrder = 8
+    OnChange = ChangeEdit
+    OnKeyDown = FormKeyDown
+  end
+end

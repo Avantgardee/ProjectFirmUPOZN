@@ -1,0 +1,147 @@
+unit WrkUnit;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.NumberBox, Vcl.Mask, tool;
+
+type
+  TWrkForm = class(TForm)
+    LabelFN: TLabel;
+    LabelSN: TLabel;
+    LabelMN: TLabel;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    ButtonAdd: TButton;
+    ButtonCncl: TButton;
+    EditName: TEdit;
+    EditS: TEdit;
+    EditM: TEdit;
+    EditPst: TEdit;
+    EditTime: TNumberBox;
+    EditCode: TEdit;
+    EditDirCode: TEdit;
+    procedure Clear;
+    function ShowForNew(var Emp : TEmployee): TModalResult;
+    function ShowForEdit(var Emp : TEmployee): TModalResult;
+    procedure ChangeEdit(Sender: TObject);
+    procedure EditPress(Sender: TObject; var Key: Char);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure EditSKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  WrkForm: TWrkForm;
+
+implementation
+
+{$R *.dfm}
+
+{ TWrkForm }
+
+procedure TWrkForm.ChangeEdit(Sender: TObject);
+begin
+    if Sender = EditPst then
+    begin
+        if EditPst.Text = 'Руководитель' then
+        begin
+            EditDirCode.NumbersOnly := False;
+            EditDirCode.Text := '-';
+            EditDirCode.ReadOnly := True;
+        end
+        else
+        begin
+            EditDirCode.Text := '';
+            EditDirCode.ReadOnly := False;
+            EditDirCode.NumbersOnly := True;
+        end;
+    end;
+    if (EditCode.Text <> '') and
+        (EditDirCode.Text <> '')
+        and (EditName.Text <> '')
+        and (EditS.Text <> '')
+        and (EditPst.Text <> '')
+        and (EditM.Text <> '') then
+        ButtonAdd.Enabled := True
+    else
+        ButtonAdd.Enabled := False;
+end;
+
+procedure TWrkForm.Clear;
+begin
+    EditCode.Text := '';
+    EditDirCode.Text := '';
+    EditName.Text := '';
+    EditS.Text := '';
+    EditPst.Text := '';
+    EditM.Text := '';
+    EditTime.Text := '1';
+end;
+
+procedure TWrkForm.EditPress(Sender: TObject; var Key: Char);
+begin
+    If (TEdit(Sender).Text = '') and (((Key > #223) or (Key < #192)) and (Key <> #08)) Then
+        Key := #0;
+    If (TEdit(Sender).Text <> '') and(Key < #224) and (Key <> #08) Then
+        Key := #0;
+end;
+
+procedure TWrkForm.EditSKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    If (Shift = [ssShift]) And (Key = VK_INSERT) Then Abort;
+end;
+
+procedure TWrkForm.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    If (Shift = [ssShift]) And (Key = VK_INSERT) Then Abort;
+end;
+
+function TWrkForm.ShowForEdit(var Emp: TEmployee): TModalResult;
+begin
+    EditCode.Text := Emp.Code;
+    EditName.Text := Emp.FullName.FirstName;
+    EditS.Text := Emp.FullName.SecondName;
+    EditM.Text := Emp.FullName.MiddleName;
+    EditPst.Text := Emp.Post;
+    EditTime.Text := IntToStr(Emp.WorkingHours);
+    EditDirCode.Text := Emp.Director;
+
+    Result := ShowModal;
+    if Result = mrOk then
+    begin
+        Emp.Code := EditCode.Text;
+        Emp.FullName.FirstName := EditName.Text;
+        Emp.FullName.SecondName := EditS.Text;
+        Emp.FullName.MiddleName := EditM.Text;
+        Emp.Post := EditPst.Text;
+        Emp.WorkingHours := StrToInt(EditTime.Text);
+        Emp.Director := EditDirCode.Text;
+    end
+end;
+
+function TWrkForm.ShowForNew(var Emp: TEmployee): TModalResult;
+begin
+    Clear;
+    Result := ShowModal;
+    if Result = mrOk then
+    begin
+        Emp.Code := EditCode.Text;
+        Emp.FullName.FirstName := EditName.Text;
+        Emp.FullName.SecondName := EditS.Text;
+        Emp.FullName.MiddleName := EditM.Text;
+        Emp.Post := EditPst.Text;
+        Emp.WorkingHours := StrToInt(EditTime.Text);
+        Emp.Director := EditDirCode.Text;
+    end;
+end;
+
+end.

@@ -1,0 +1,121 @@
+unit FindUnit;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Main, Tool, ListUnit;
+
+type
+  TFormFind = class(TForm)
+    EditN: TEdit;
+    Lbl: TLabel;
+    Button: TButton;
+    LblPrjct: TLabel;
+    EdtPrjct: TEdit;
+    procedure FindEmp();
+    procedure FindDir();
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure ButtonClick(Sender: TObject);
+    procedure ChangeEdit(Sender: TObject);
+    procedure EditNKeyPress(Sender: TObject; var Key: Char);
+    procedure EdtPrjctKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FormFind: TFormFind;
+
+implementation
+
+{$R *.dfm}
+
+{ TFormFind }
+
+procedure TFormFind.ButtonClick(Sender: TObject);
+var
+    L : TWorkList;
+begin
+    L := TWorkList.Create;
+    if Lbl.Caption = 'Фамилия руководителя' then
+    begin
+        L := FormMain.WorkList.FindDirectorProject(FormMain.EmployeeList, EditN.Text);
+        if l.Size = 0 then
+            ShowMessage('0')
+        else
+        begin
+            ListForm.Show;
+            ListForm.NewWorkList(l);
+            Close;
+        end;
+    end
+    else
+    begin
+        L := FormMain.WorkList.FindWorkProject(EdtPrjct.Text, EditN.Text);
+        if l.Size = 0 then
+            ShowMessage('0')
+        else
+        begin
+            ListForm.Show;
+            ListForm.NewWorkList(l);
+            Close;
+        end;
+    end;
+end;
+
+procedure TFormFind.ChangeEdit(Sender: TObject);
+begin
+    if LblPrjct.Visible then
+    begin
+        Button.Enabled := (editN.Text <> '') and (EdtPrjct.Text <> '');
+    end
+    else
+    begin
+        Button.Enabled := (editN.Text <> '');
+    end;
+end;
+
+procedure TFormFind.EditNKeyPress(Sender: TObject; var Key: Char);
+begin
+    If (TEdit(Sender).Text = '') and (((Key > #223) or (Key < #192)) and (Key <> #08)) Then
+        Key := #0;
+    If (TEdit(Sender).Text <> '') and(Key < #224) and (Key <> #08) Then
+        Key := #0;
+end;
+
+procedure TFormFind.EdtPrjctKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    If (Shift = [ssShift]) And (Key = VK_INSERT) Then Abort;
+end;
+
+procedure TFormFind.FindDir;
+begin
+    LblPrjct.Visible := False;
+    EdtPrjct.Visible := False;
+    editN.Text := '';
+    Lbl.Caption := 'Фамилия руководителя';
+    editN.MaxLength := 10;
+    editN.NumbersOnly := False;
+end;
+
+procedure TFormFind.FindEmp;
+begin
+    LblPrjct.Visible := True;
+    EdtPrjct.Visible := True;
+    editN.Text := '';
+    Lbl.Caption := 'Код исполнителя';
+    editN.MaxLength := 4;
+    editN.NumbersOnly := True;
+end;
+
+procedure TFormFind.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+    FormMain.Enabled := True;
+end;
+
+end.

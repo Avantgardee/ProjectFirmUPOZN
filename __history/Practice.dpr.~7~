@@ -1,0 +1,23 @@
+program Practice;
+
+uses
+  Vcl.Forms,
+  Main in 'Main.pas' {FormMain},
+  Tool in 'Tool.pas',
+  ListUnit in 'ListUnit.pas' {ListForm},
+  WrkUnit in 'WrkUnit.pas' {WrkForm},
+  Work in 'Work.pas' {WorkForm},
+  FindUnit in 'FindUnit.pas' {FormFind};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TFormMain, FormMain);
+  Application.CreateForm(TListForm, ListForm);
+  Application.CreateForm(TWrkForm, WrkForm);
+  Application.CreateForm(TWorkForm, WorkForm);
+  Application.CreateForm(TFormFind, FormFind);
+  Application.Run;
+end.

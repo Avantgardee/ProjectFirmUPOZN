@@ -1,0 +1,213 @@
+object WorkForm: TWorkForm
+  Left = 0
+  Top = 0
+  AutoSize = True
+  BorderIcons = []
+  BorderStyle = bsSingle
+  Caption = #1055#1088#1086#1077#1082#1090
+  ClientHeight = 335
+  ClientWidth = 508
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel
+    Left = 215
+    Top = 73
+    Width = 127
+    Height = 18
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1086#1077#1082#1090#1072
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 215
+    Top = 187
+    Width = 58
+    Height = 18
+    Caption = #1047#1072#1076#1072#1085#1080#1077
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label3: TLabel
+    Left = 215
+    Top = 109
+    Width = 117
+    Height = 18
+    Caption = #1050#1086#1076' '#1080#1089#1087#1086#1083#1085#1080#1090#1077#1083#1103
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label4: TLabel
+    Left = 215
+    Top = 149
+    Width = 123
+    Height = 18
+    Caption = #1050#1086#1076' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1103
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label5: TLabel
+    Left = 23
+    Top = 49
+    Width = 146
+    Height = 18
+    Caption = #1044#1072#1090#1072' '#1074#1099#1076#1072#1095#1080' '#1079#1072#1076#1072#1085#1080#1103
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label6: TLabel
+    Left = 213
+    Top = 224
+    Width = 165
+    Height = 18
+    Caption = #1057#1088#1086#1082' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'('#1076#1085#1077#1081')'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label7: TLabel
+    Left = 0
+    Top = 0
+    Width = 500
+    Height = 27
+    Alignment = taCenter
+    AutoSize = False
+    Caption = #1044#1086#1073#1072#1074#1100#1090#1077' '#1085#1086#1074#1086#1077' '#1079#1072#1076#1072#1085#1080#1077
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
+    Font.Name = 'Montserrat SemiBold'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Edit1: TEdit
+    Left = 354
+    Top = 73
+    Width = 154
+    Height = 21
+    MaxLength = 30
+    PopupMenu = PopupMenu1
+    TabOrder = 0
+    OnChange = ChangeEdit
+    OnKeyDown = EdtPrjctKeyDown
+    OnKeyPress = Edit1KeyPress
+  end
+  object Edit2: TEdit
+    Left = 355
+    Top = 187
+    Width = 153
+    Height = 21
+    MaxLength = 30
+    PopupMenu = PopupMenu1
+    TabOrder = 1
+    OnChange = ChangeEdit
+    OnKeyDown = EdtPrjctKeyDown
+    OnKeyPress = Edit1KeyPress
+  end
+  object MonthCalendar1: TMonthCalendar
+    Left = 0
+    Top = 73
+    Width = 191
+    Height = 205
+    Date = 45064.000000000000000000
+    TabOrder = 2
+  end
+  object NumberBox1: TNumberBox
+    Left = 387
+    Top = 224
+    Width = 121
+    Height = 21
+    MinValue = 1.000000000000000000
+    MaxValue = 360.000000000000000000
+    PopupMenu = PopupMenu1
+    TabOrder = 3
+    Value = 1.000000000000000000
+    OnChange = ChangeEdit
+    OnKeyDown = EdtPrjctKeyDown
+  end
+  object EditCode: TEdit
+    Left = 354
+    Top = 109
+    Width = 154
+    Height = 21
+    NumbersOnly = True
+    PopupMenu = PopupMenu1
+    TabOrder = 4
+    OnChange = ChangeEdit
+    OnKeyDown = EdtPrjctKeyDown
+  end
+  object EditDirCode: TEdit
+    Left = 354
+    Top = 149
+    Width = 154
+    Height = 21
+    NumbersOnly = True
+    PopupMenu = PopupMenu1
+    TabOrder = 5
+    OnChange = ChangeEdit
+    OnKeyDown = EdtPrjctKeyDown
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 294
+    Width = 500
+    Height = 41
+    BevelOuter = bvNone
+    TabOrder = 6
+    object ButtonAdd: TButton
+      Left = 0
+      Top = 0
+      Width = 257
+      Height = 41
+      Align = alLeft
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Enabled = False
+      ModalResult = 1
+      TabOrder = 0
+    end
+    object ButtonCncl: TButton
+      Left = 256
+      Top = 0
+      Width = 244
+      Height = 41
+      Align = alRight
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100
+      ModalResult = 2
+      TabOrder = 1
+    end
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 600
+    Top = 272
+  end
+end

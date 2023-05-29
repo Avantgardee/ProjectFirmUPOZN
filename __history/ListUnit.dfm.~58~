@@ -1,0 +1,196 @@
+object ListForm: TListForm
+  Left = 0
+  Top = 0
+  Caption = #1057#1087#1080#1089#1086#1082
+  ClientHeight = 397
+  ClientWidth = 738
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  Menu = MainMenu1
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  OnClose = FormClose
+  PixelsPerInch = 96
+  TextHeight = 13
+  object PanelBtn: TPanel
+    Left = 0
+    Top = 0
+    Width = 738
+    Height = 80
+    Align = alTop
+    Color = clInactiveCaption
+    ParentBackground = False
+    TabOrder = 0
+    object Panel1: TPanel
+      Left = 1
+      Top = 1
+      Width = 240
+      Height = 78
+      Align = alLeft
+      Alignment = taLeftJustify
+      BevelOuter = bvNone
+      TabOrder = 0
+      object ButtonAdd: TButton
+        Left = 0
+        Top = 0
+        Width = 240
+        Height = 35
+        Action = Add
+        Align = alTop
+        Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -15
+        Font.Name = 'Montserrat'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+      end
+    end
+    object Panel2: TPanel
+      Left = 497
+      Top = 1
+      Width = 240
+      Height = 78
+      Align = alRight
+      Alignment = taRightJustify
+      BevelOuter = bvNone
+      TabOrder = 1
+      object ButtonDelete: TButton
+        Left = 0
+        Top = 0
+        Width = 240
+        Height = 35
+        Action = Delete
+        Align = alTop
+        Caption = #1059#1076#1072#1083#1080#1090#1100
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -15
+        Font.Name = 'Montserrat'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+      end
+    end
+    object Panel3: TPanel
+      Left = 241
+      Top = 1
+      Width = 256
+      Height = 78
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 2
+      object ButtonEdit: TButton
+        Left = 0
+        Top = 0
+        Width = 256
+        Height = 35
+        Action = Change
+        Align = alTop
+        Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -15
+        Font.Name = 'Montserrat'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+      end
+    end
+  end
+  object strgrdList: TStringGrid
+    Left = 0
+    Top = 80
+    Width = 738
+    Height = 317
+    Align = alClient
+    DefaultColWidth = 120
+    DefaultRowHeight = 30
+    DrawingStyle = gdsGradient
+    FixedCols = 0
+    RowCount = 1
+    FixedRows = 0
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Montserrat'
+    Font.Style = []
+    GradientStartColor = clActiveCaption
+    ParentFont = False
+    ScrollBars = ssVertical
+    TabOrder = 1
+  end
+  object MainMenu1: TMainMenu
+    Left = 488
+    Top = 344
+    object File1: TMenuItem
+      Caption = '&'#1060#1072#1081#1083
+      object Open1: TMenuItem
+        Action = Open
+      end
+      object SaveAs1: TMenuItem
+        Action = Save
+      end
+    end
+  end
+  object ActionList: TActionList
+    OnUpdate = ActionListUpdate
+    Left = 557
+    Top = 368
+    object Add: TAction
+      Caption = 'Add'
+      OnExecute = AddExecute
+    end
+    object Delete: TAction
+      Caption = 'Delete'
+      OnExecute = DeleteExecute
+    end
+    object Change: TAction
+      Caption = 'Change'
+      OnExecute = ChangeExecute
+    end
+    object Open: TAction
+      Caption = #1054#1090#1082#1088#1099#1090#1100
+      OnExecute = OpenExecute
+    end
+    object Save: TAction
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+      OnExecute = SaveExecute
+    end
+  end
+  object OpenDialog: TOpenDialog
+    DefaultExt = '.worker'
+    Filter = '*.worker|*.worker'
+    Left = 629
+    Top = 360
+  end
+  object SaveDialog: TSaveDialog
+    DefaultExt = '.worker'
+    Filter = '*.worker|*.worker'
+    Left = 701
+    Top = 352
+  end
+  object OpenDialog1: TOpenDialog
+    DefaultExt = '.work'
+    Filter = '*.work|*.work'
+    Left = 429
+    Top = 352
+  end
+  object SaveDialog1: TSaveDialog
+    DefaultExt = '.work'
+    Filter = '*.work|*.work'
+    Left = 325
+    Top = 360
+  end
+  object SaveDialog2: TSaveDialog
+    DefaultExt = '.txt'
+    Filter = '*.txt|*.txt'
+    Left = 373
+    Top = 360
+  end
+end
